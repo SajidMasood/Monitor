@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Monitor</string>
+    <string name="title_activity_child">ChildActivity</string>
+
+
+    <string name="item_1">item 1</string>
+    <string name="item_2">item 2</string>
+    <string name="item_3">item 3</string>
+</resources>
