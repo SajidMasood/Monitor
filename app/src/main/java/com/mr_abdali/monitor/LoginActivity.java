@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -29,11 +30,13 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
     public static final String EXTRA_MESSAGE = "ParentId";
+    private ProgressDialog progressDialog;
 
     @BindView(R.id.input_email) EditText mEmailText;
     @BindView(R.id.input_password) EditText mPasswordText;
     @BindView(R.id.btn_login) Button mLoginButton;
     @BindView(R.id.link_signup) TextView mSignupLink;
+    @BindView(R.id.tvForgotPassword) TextView mForgotPassword;
 
     //TODO Database variables
     private FirebaseAuth mAuth;
@@ -48,6 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         //TODO Database
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        //TODO Check User Already Loged In or Not.....
+        /*FirebaseUser mUser = mAuth.getCurrentUser();
+        if (mUser != null){
+            finish();
+            startActivity(new Intent(LoginActivity.this, ChildActivity.class));
+        }*/
 
         //TODO Login Button Code
         mLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -69,31 +79,37 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
+        //TODO start Forgot Password area...
+        mForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+            }
+        });
+        //TODO end forgot password area
+
+    }     //TODO onCreate() Method End.......
 
     //TODO login method Start
     public void login() {
         Log.d(TAG, "Login");
-
         if (!validate()) {
             onLoginFailed();
             return;
         }
         mLoginButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(LoginActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
-        //onLoginSuccess();
-        new android.os.Handler().postDelayed(
+        onLoginSuccess();
+        /*new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        onLoginSuccess();
+                        //onLoginSuccess();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 3000);*/
     }
     //TODO login method End
 
@@ -110,21 +126,20 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             mEmailText.setError(null);
         }
-
         if (password.isEmpty() || password.length() < 6 || password.length() > 15) {
             mPasswordText.setError("between 6 and 15 alphanumeric characters");
             valid = false;
         } else {
             mPasswordText.setError(null);
         }
-
         return valid;
     }
     //TODO validate() End here
 
     //TODO onLoginFailed() start
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        progressDialog.dismiss();
+        Toast.makeText(getBaseContext(), "Login failed! Try Again...", Toast.LENGTH_LONG).show();
         mLoginButton.setEnabled(true);
     }
     //TODO onLoginFailed() End here
@@ -141,13 +156,12 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         String user_id = mAuth.getCurrentUser().getUid();
-                        //startActivity(new Intent(LoginActivity.this, ChildActivity.class));
                         Intent intent = new Intent(LoginActivity.this, ChildActivity.class);
                         intent.putExtra(EXTRA_MESSAGE,user_id);
                         finish();
                         startActivity(intent);
-                    } else if (!task.isSuccessful()){
-                        Toast.makeText(LoginActivity.this, "Not exist  ",Toast.LENGTH_LONG).show();
+                    } else{
+                        onLoginFailed();
                     }
                 }
             });

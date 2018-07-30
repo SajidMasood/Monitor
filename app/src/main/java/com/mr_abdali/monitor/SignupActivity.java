@@ -27,6 +27,7 @@ public class SignupActivity extends AppCompatActivity {
 
     //TODO Variables Form XML
     private static final String TAG = "SignupActivity";
+    private ProgressDialog progressDialog;
 
     @BindView(R.id.input_name) EditText _nameText;
     @BindView(R.id.input_email) EditText _emailText;
@@ -64,8 +65,8 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Finish the registration screen and return to the Login activity
                 Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                startActivity(intent);
                 finish();
+                startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
@@ -76,26 +77,24 @@ public class SignupActivity extends AppCompatActivity {
     //TODO signup() method code Start
     public void signup() {
         Log.d(TAG, "Signup");
-
         if (!validate()) {
             onSignupFailed();
             return;
         }
 
         _signupButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(SignupActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
         onSignupSuccess();
-        new android.os.Handler().postDelayed(
+        /*new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         //onSignupSuccess();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 3000);*/
     }
     //TODO signup() method code End
 
@@ -103,40 +102,34 @@ public class SignupActivity extends AppCompatActivity {
     // TODO validate() success process Start
     public boolean validate() {
         boolean valid = true;
-
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
-
         if (name.isEmpty() || name.length() < 5) {
             _nameText.setError("at least 5 characters");
             valid = false;
         } else {
             _nameText.setError(null);
         }
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {
             _emailText.setError(null);
         }
-
         if (password.isEmpty() || password.length() < 6 || password.length() > 15) {
             _passwordText.setError("between 6 and 15 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);
         }
-
         if (reEnterPassword.isEmpty() || reEnterPassword.length() < 6 || reEnterPassword.length() > 15 || !(reEnterPassword.equals(password))) {
             _reEnterPasswordText.setError("Password Do not match");
             valid = false;
         } else {
             _reEnterPasswordText.setError(null);
         }
-
         return valid;
     }
     // TODO validate() success process End
@@ -169,6 +162,7 @@ public class SignupActivity extends AppCompatActivity {
                         current_user.child("Password").setValue(password);
                         Toast.makeText(SignupActivity.this,"Account Create Successfully",Toast.LENGTH_SHORT).show();
                         // TODO pass through sign In login Activity
+                        finish();
                         startActivity(new Intent(SignupActivity.this, ChildActivity.class));
                         //finish();
                     } else {
@@ -176,7 +170,7 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(SignupActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
                         finish();
                     }
-                    finish();
+                    //finish();
                 }
             });
         }
