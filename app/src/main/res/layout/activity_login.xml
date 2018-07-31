@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:scrollbarAlwaysDrawVerticalTrack="true"
-    tools:context="com.mr_abdali.login.LoginActivity">
+    tools:context="com.mr_abdali.monitor.LoginActivity">
 
     <TextView
         android:id="@+id/login_title"
@@ -68,10 +68,12 @@
             </android.support.design.widget.TextInputLayout>
 
             <TextView
+                android:id="@+id/tvForgotPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:paddingTop="5dp"
+                android:textColor="@color/colorTV"
                 android:text="Forgot Password?" />
 
             <Button
@@ -91,6 +93,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="No account yet? Create one"
                 android:gravity="right"
+                android:textColor="@color/colorTV"
                 android:textSize="16dip"/>
 
         </LinearLayout>

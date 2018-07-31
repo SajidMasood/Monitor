@@ -166,6 +166,7 @@ public class SignupActivity extends AppCompatActivity {
                         startActivity(new Intent(SignupActivity.this, ChildActivity.class));
                         //finish();
                     } else {
+                        progressDialog.dismiss();
                         Log.e("ERROR",task.getException().toString());
                         Toast.makeText(SignupActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
                         finish();

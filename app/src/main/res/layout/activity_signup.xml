@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:scrollbarAlwaysDrawVerticalTrack="true"
-    tools:context="com.mr_abdali.login.LoginActivity">
+    tools:context="com.mr_abdali.monitor.SignupActivity">
 
     <TextView
         android:id="@+id/registration_title"
@@ -117,6 +117,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="Already a member? Login"
                 android:gravity="center"
+                android:textColor="@color/colorTV"
                 android:textSize="16dip"/>
 
         </LinearLayout>

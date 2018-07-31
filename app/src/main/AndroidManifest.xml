@@ -5,7 +5,6 @@
     <!-- Uses permission custom -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,24 +14,28 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- SignupActivity -->
         <activity android:name=".SignupActivity" />
+        <!-- ChildActivity -->
         <activity
             android:name=".ChildActivity"
             android:label="@string/title_activity_child"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <!-- child add activity -->
-        <activity android:name=".ChildAddActivity"/>
-
-        <activity android:name=".TabActivity"
-            android:parentActivityName=".ChildActivity"
-            android:label="Tab Activity"/>
-        <activity android:name=".chat.MainChat"
-            android:parentActivityName=".ChildActivity"
-            />
+        <activity android:name=".ChildAddActivity" />
+        <activity
+            android:name=".TabActivity"
+            android:label="Tab Activity"
+            android:parentActivityName=".ChildActivity" />
+        <activity
+            android:name=".chat.MainChat"
+            android:parentActivityName=".ChildActivity" />
+        <!-- ForgotPasswordActivity -->
+        <activity android:name=".ForgotPasswordActivity"/>
     </application>
 
 </manifest>

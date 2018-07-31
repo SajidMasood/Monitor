@@ -15,4 +15,6 @@
     <color name="colorBackground">#F44336</color>
     <color name="colorItem">#2196F3</color>
     <color name="colorFAB">#36c1f4</color>
+
+    <color name="colorTV">#020202</color>
 </resources>

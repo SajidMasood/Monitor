@@ -26,8 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ChildAddActivity extends AppCompatActivity {
 
+    public static final String EXTRA_MESSAGE = "ParentId";
     private EditText childname,childage,childemail,password,confirmedpassword;
-    private RadioButton male1,female;
+    //private RadioButton male1,female;
     //private ProgressBar progressBar1;
     private Button btn_add_child;
     private String gender;
@@ -60,9 +61,6 @@ public class ChildAddActivity extends AppCompatActivity {
                 final String childAge = childage.getText().toString().trim();
                 final String childEmail = childemail.getText().toString().trim();
                 final String pass= password.getText().toString().trim();
-                //    final Boolean male=male1.isChecked();
-                //   final Boolean fem=female.isChecked();
-
 
                 if (TextUtils.isEmpty(childName))
                 {
@@ -99,7 +97,7 @@ public class ChildAddActivity extends AppCompatActivity {
                 final ProgressDialog progressDialog = new ProgressDialog(ChildAddActivity.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Authenticating...");
+                progressDialog.setMessage("Adding new Child!...");
                 progressDialog.show();
                 new android.os.Handler().postDelayed(
                         new Runnable() {
@@ -109,37 +107,28 @@ public class ChildAddActivity extends AppCompatActivity {
                             }
                         }, 2000);
                 //        progressBar1.setVisibility(View.VISIBLE);
-                mauth.createUserWithEmailAndPassword(childEmail, pass)
-                        .addOnCompleteListener(ChildAddActivity.this, new OnCompleteListener<AuthResult>()
-                        {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // Toast.makeText(childaddActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_LONG).show();
-                                if(task.isSuccessful())
-                                {
-                                    String user_id = mauth.getCurrentUser().getUid();
-                                    DatabaseReference current_user = mDatabase.child(parentId).child(user_id);
-                                    current_user.child("ChildName").setValue(childName);
-                                    current_user.child("ChildEmail").setValue(childEmail);
-                                    current_user.child("password").setValue(pass);
-                                    current_user.child("Age").setValue(childAge);
-                                    Toast.makeText(ChildAddActivity.this,"Child Successfully Added",Toast.LENGTH_SHORT).show();
-                                    Intent intent =new Intent(ChildAddActivity.this,ChildActivity.class);
-                                    //finish();
-                                    startActivity(intent);
-                                }
-                                //                      progressBar1.setVisibility(View.GONE);
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                else if (!task.isSuccessful()) {
-                                    Toast.makeText(ChildAddActivity.this, "Authentication failed. try Again" ,
-                                            Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(ChildAddActivity.this, ChildActivity.class));
-                                    finish();
-                                }
+                mauth.createUserWithEmailAndPassword(childEmail, pass).addOnCompleteListener(ChildAddActivity.this, new OnCompleteListener<AuthResult>(){
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            String user_id = mauth.getCurrentUser().getUid();
+                            DatabaseReference current_user = mDatabase.child(parentId).child(user_id);
+                            current_user.child("ChildName").setValue(childName);
+                            current_user.child("ChildEmail").setValue(childEmail);
+                            current_user.child("password").setValue(pass);
+                            current_user.child("Age").setValue(childAge);
+                            finish();
+                            Toast.makeText(ChildAddActivity.this,"Child Successfully Added",Toast.LENGTH_LONG).show();
+                            Intent intent =new Intent(ChildAddActivity.this,ChildActivity.class);
+                            intent.putExtra(EXTRA_MESSAGE, parentId);
+                            startActivity(intent);
+                            }else{
+                                Toast.makeText(ChildAddActivity.this, "Authentication failed. try Again",Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(ChildAddActivity.this, ChildActivity.class));
+                                finish();
                             }
-                        });
+                    }
+                });
             }
         });
     }
